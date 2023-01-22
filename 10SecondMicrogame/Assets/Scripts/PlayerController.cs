@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -45,6 +46,8 @@ public class PlayerController : MonoBehaviour
     int eggCount;
     bool cowPickUp;
 
+    public GameObject winText;
+
     float timeBeforeWinScreen = 2f;
 
     public Coroutine Death;
@@ -56,6 +59,7 @@ public class PlayerController : MonoBehaviour
         winLose.clip = bGM;
         winLose.Play();
         eggCount = 0;
+        winText.SetActive(false);
     }
 
     // Update is called once per frame
@@ -90,7 +94,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             timeBeforeWinScreen = 0;
-            Debug.Log("lose game");
+            Debug.Log("win game");
             SceneManager.LoadScene("GameOverWin");
         }
         }
@@ -127,7 +131,7 @@ public class PlayerController : MonoBehaviour
             CheckForWin();
         }
 
-        if (other.collider.tag == "Cow" && abduction == true)
+        if (other.collider.tag == "Cow" && abduction == true &&eggCount != 3)
         {
             Destroy(timer.gameObject);
             Debug.Log("lost game");
@@ -139,9 +143,11 @@ public class PlayerController : MonoBehaviour
     {
         if (eggCount == 3)
         {
+            winText.SetActive(true);
             winLose.clip = winSound;
             winLose.Play();
             Destroy(timer.gameObject);
+            timer = null;
             Debug.Log("WIN!!!!");
             //player wins
         }
